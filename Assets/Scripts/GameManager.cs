@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,30 +19,31 @@ public class GameManager : MonoBehaviour
         GemGenerator();
     }
 
-    //float moveTime = 0;
     bool test = false;
+    Coroutine coroutine;
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))// 젬바꾸기
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            //test = true;
+            test = !test;
 
-            //temp.GemChange(gems[0], gemSprites);
-            //gems[0].GemChange(gems[1], gemSprites);
-            //gems[1].GemChange(temp, gemSprites);
-            //Debug.Log($"0 : {gems[0].color}, 1 : {gems[1].color}");
-
-            //for (int i = 0; i < Constants.Raws; i++)
-            //{
-            //    GemInformation[] info = gems.FindAll(e => e.x == i).ToArray();
-            //    Debug.Log($"{i} : {info[0].color}, {info[1].color}, {info[2].color}," +
-            //        $"{info[3].color}, {info[4].color}, {info[5].color}, {info[6].color}");
-            //}
-
-            //GemBoardNewShuffle();
-
-            GemMatchingInfomation.IsMatchingTheGem(gems);
+            //GemMatchingInfomation.IsMatchingTheGem(gems);
             //GemMatchingInfomation.Test(gems);
+
+            //if (test)
+            //{
+            //    coroutine = StartCoroutine(GemMatchingInfomation.FlickerGemEffect(gems));
+            //}
+            //else
+            //{
+            //    if (coroutine != null)
+            //    {
+            //        StopCoroutine(coroutine);
+            //        List<GemInformation> temp = gems.FindAll(e => e.coord.x == 3);
+            //        foreach (GemInformation g in temp)  // 코루틴 끝나면 효과 초기화
+            //            g.gemImg.color = Color.white;
+            //    }
+            //}
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift))// 매칭 검수
@@ -64,20 +64,30 @@ public class GameManager : MonoBehaviour
         //
         //    gems[0].rect.localPosition = Vector2.Lerp(start, target, t);
         //}
+
+        foreach (GemInformation g in gems)
+        {
+            //g.debug.text = g.color.ToString();
+            g.debug.text = g.isDestroy ? "D" : "";
+            //g.debug.text = g.index.ToString();
+        }
     }
 
-    float excuteTime = 9.0f;
-    float nextTime = 0.0f;
+    //float excuteTime = 9.0f;
+    //float nextTime = 0.0f;
     private void FixedUpdate()
     {
         if (test)
         {
-            if (Time.time > nextTime)
-            {
-                nextTime = Time.time + excuteTime;
-                GemBoardNewShuffle();
-                GemBoardCheckAndShuffle();
-            }
+            //if (Time.time > nextTime) // 일정시간 계속 렌덤 판짜기
+            //{
+            //    nextTime = Time.time + excuteTime;
+            //    GemBoardNewShuffle();
+            //    GemBoardCheckAndShuffle();
+            //}
+
+            // DOTWeen
+            // https://maintaining.tistory.com/entry/Unity-UI-%EA%B9%9C%EB%B9%A1%EC%9E%84-%ED%9A%A8%EA%B3%BC-%EB%84%A3%EA%B8%B0
         }
     }
 
@@ -96,7 +106,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        //GemBoardCheckAndShuffle();
+        GemBoardCheckAndShuffle();
     }
 
     GemImmutableInfo CreateGemImmutableInfo()   // 변하지않는 젬 공통 속성 생성
@@ -126,10 +136,10 @@ public class GameManager : MonoBehaviour
 
     GameObject CreateRandomGem(int x, int y)    // 개별 쳄 오브젝트와 정보 생성
     {
-        GameObject Obj = new GameObject();
-        Obj.name = "GEM";
+        GameObject obj = new GameObject();
+        obj.name = "GEM";
 
-        RectTransform objRect = Obj.AddComponent<RectTransform>();
+        RectTransform objRect = obj.AddComponent<RectTransform>();
         objRect.pivot = new Vector2(0, 1);
         objRect.SetParent(gemBoard.transform);
 
@@ -142,15 +152,41 @@ public class GameManager : MonoBehaviour
 
         Image img = imgObj.AddComponent<Image>();
         //int color = (int)colorForTest[(x * 7) + y];
-        int color = Random.Range(0, gemSprites.Length);
+        int color = Random.Range(0, gemSprites.Length - 1);
         img.sprite = gemSprites[color];
 
         RectTransform rt = imgObj.GetComponent<RectTransform>();
         rt.pivot = new Vector2(0, 1);
-        rt.SetParent(Obj.transform);
+        rt.SetParent(obj.transform);
 
         rt.sizeDelta = info.imgSize;
         rt.localPosition = info.ImgPosition;
+
+        // Debug
+        GameObject textObject = new GameObject();
+        textObject.name = "Debug";
+        textObject.transform.SetParent(obj.transform);
+        textObject.layer = LayerMask.NameToLayer("UI");
+
+        textObject.AddComponent<CanvasRenderer>();
+
+        RectTransform textRt = textObject.AddComponent<RectTransform>();
+        textRt.localPosition = Vector3.zero;
+        textRt.localScale = Vector3.one;
+        textRt.anchorMin = new Vector2(0f, 0f);
+        textRt.anchorMax = new Vector2(1f, 1f);
+        textRt.pivot = new Vector2(0.5f, 0.5f);
+        textRt.offsetMin = new Vector2(0, 0);
+        textRt.offsetMax = new Vector2(1, 1);
+
+        Text text = textObject.AddComponent<Text>();
+        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        text.fontSize = 20;
+        text.supportRichText = true;
+        text.alignment = TextAnchor.MiddleCenter;
+        text.color = Color.black;
+        text.resizeTextForBestFit = false;
+        // =========
 
         //gems.Add(new GemInformation { name = Obj, index = gemObject.Count, x = x, y = y, 
         //    color = (GemColors)color, rect = objRect, gemImg = imgObj.GetComponent<Image>() });
@@ -161,11 +197,12 @@ public class GameManager : MonoBehaviour
             rect = objRect,
             gemImg = img,
             isDestroy = false,
+            debug = text,   // Debug
         });
         //Obj.name = ((GemColors)color).ToString();
         //Obj.name = $"[{x}][{y}]";
 
-        return Obj;
+        return obj;
     }
 
     void GemBoardCheckAndShuffle()    // 배치 직후 즉시 매칭되는 젬이 있는지 검수하고 교환
@@ -284,6 +321,7 @@ public class GemInformation
 
     public RectTransform rect;
     public Image gemImg;
+    public Text debug;
 
     public bool isDestroy;
 
@@ -320,7 +358,7 @@ public class GemInformation
     {
         if (gemImg != null)
         {
-            this.gemImg.sprite = null;
+            this.gemImg.gameObject.SetActive(false);
         }
     }
 }

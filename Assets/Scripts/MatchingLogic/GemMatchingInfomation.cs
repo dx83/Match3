@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using UnityEngine;
 
 public class GemMatchingInfomation
@@ -43,25 +45,147 @@ public class GemMatchingInfomation
             }
         }
     }
+    /*
+        1. 가로 세로 중에서 랜덤 선택
+        2. 0, 3, 6 중에서 랜덤 선택
+        3. 거기서 부터 무조건 왼쪽에서 오른쪽으로 검색
+        4. 힌트 효과는 3초 있다가 보여주기
 
-    //static List<GemInformation> concat = new List<GemInformation>();
-    static List<List<GemInformation>> matches = new List<List<GemInformation>>();
+        무조건 스왑이동이 전제, 적 성에서 먼쪽을 선택
+        ##*####
+        **#**##
+        ##*####
+        #######
+        4방향으로 이동후 가로 세로 즉시 매칭과 같은 효과
+    */
+    static List<List<GemInformation>> potentialMatches = new List<List<GemInformation>>();
+    static public void IsMatchingForHint(List<GemInformation> gems)
+    {
+        if (potentialMatches.Count == 0)
+        {
+            for (int i = 0; i < 4; i++)
+                potentialMatches.Add(new List<GemInformation>());
+        }
+
+        //int cond0 = Random.Range(0, 2);
+        //int cond1 = Random.Range(0, 3);
+        //switch(cond0)
+        //{
+        //    case 0:     break;
+        //
+        //}
+
+        for (int i = 0; i < gems.Count; i++) // 모든 젬 대상
+        {
+            GemInformation g = gems[i];
+
+            // left
+            if ((i % Constants.COLUMNS) != 0)
+            {
+                // left
+                
+                // up
+                // right
+            }
+        }
+    }
+
+    static public IEnumerator FlickerGemEffect(List<GemInformation> potentialMatches)   // 젬 깜박임 효과
+    {
+        List<GemInformation> temp = potentialMatches.FindAll(e => e.coord.x == 3).ToList();
+        while(true)
+        {
+            for (float i = 0.95f; i >= 0.55f; i -= 0.1f)
+            {
+                // 힌트에 해당되는 각 젬마다
+                foreach (var item in temp)//potentialMatches)
+                {
+                    if (item == null)
+                        yield break;
+                    // 알파값을 1f 에서 0.3f 까지 수정 : 점점 투명해짐
+                    Color c = item.gemImg.color;
+                    c.a = i;
+                    item.gemImg.color = c;
+                }
+                // 지정한 수치만큼 딜레이
+                yield return new WaitForSeconds(0.15f);
+            }
+            for (float i = 0.55f; i <= 0.95f; i += 0.1f)
+            {
+                // 힌트에 해당되는 각 젬마다
+                foreach (var item in temp)//potentialMatches)
+                {
+                    if (item == null)
+                        yield break;
+                    // 알파값을 0.3f 에서 1f 까지 수정 : 점점 다시 돌아옴
+                    Color c = item.gemImg.color;
+                    c.a = i;
+                    item.gemImg.color = c;
+                }
+                // 지정한 수치만큼 딜레이
+                yield return new WaitForSeconds(0.15f);
+            }
+        }
+    }
+
+    // 즉시 매칭 찾기
+    static List<List<GemInformation>> rawMatches = new List<List<GemInformation>>();
+    static List<List<GemInformation>> colMatches = new List<List<GemInformation>>();
     static public void IsMatchingTheGem(List<GemInformation> gems)
     {
-        for (int i = 0; i < Constants.RAWS; i++)
+        if (rawMatches.Count == 0)
         {
-            GemInformation[] g = gems.FindAll(e => e.coord.x == i).OrderBy(e => e.coord.y).ToArray(); ;
+            for (int i = 0; i < Constants.COLUMNS - 2; i++)
+                rawMatches.Add(new List<GemInformation>()); // 한 행의 각 젬 매칭 리스트
+            for (int i = 0; i < Constants.RAWS - 2; i++)
+                colMatches.Add(new List<GemInformation>()); // 한 열의 각 젬 매칭 리스트
+        }
 
-            for (int j = 0; j < Constants.COLUMNS; j++)
+        for (int i = 0; i < Constants.RAWS; i++)                // 한 행씩
+        {
+            for (int j = 0; j < Constants.COLUMNS - 2; j++)     // 각 젬마다
             {
-                matches.Add(new List<GemInformation>());    // 최적화 필요
-                matches[j].Add(g[j]);
-
-                for (int k = j + 1; k < Constants.COLUMNS; k++)
+                int current = i * Constants.COLUMNS + j;
+                rawMatches[j].Add(gems[current]);
+                
+                for (int k = 0; k < Constants.COLUMNS; k++)     // 매칭 확인
                 {
-                    if (g[j].isSameColor(g[k]))
+                    int next = current + k + 1;
+                    if (gems[current].isSameColor(gems[next]))  // 같은 젬이 연속되는지 확인
                     {
-                        matches[j].Add(g[k]);
+                        rawMatches[j].Add(gems[next]);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                
+                if (rawMatches[j].Count < 3)    // 2개 이하인 경우 리스트 비움
+                    rawMatches[j].Clear();
+            }
+
+            for (int j = 0; j < Constants.COLUMNS - 2; j++)     // 현재 행의 각 젬에서
+            {
+                foreach (GemInformation e in rawMatches[j])     // 매칭되어 파괴되는 젬 모두 표시
+                    e.isDestroy = true;
+                rawMatches[j].Clear();          // 다음 행을 위해 리스트 비움
+            }
+        }
+
+        for (int i = 0; i < Constants.COLUMNS; i++)             // 한 열씩
+        {
+            for (int j = 0; j < Constants.RAWS - 2; j++)        // 각 젬마다
+            {
+                int current = i + (j * Constants.RAWS);
+                colMatches[j].Add(gems[current]);
+
+                for (int k = 0; k < Constants.RAWS; k++)        // 매칭 확인
+                {
+                    int next = current + (k + 1) * Constants.RAWS;
+                    if (gems[current].isSameColor(gems[next]))  // 같은 젬이 연속되는지 확인
+                    {
+                        colMatches[j].Add(gems[next]);
                     }
                     else
                     {
@@ -69,26 +193,20 @@ public class GemMatchingInfomation
                     }
                 }
 
-                if (matches[j].Count < 3)
-                    matches[j].Clear();
+                if (colMatches[j].Count < 3)    // 2개 이하인 경우 리스트 비움
+                    colMatches[j].Clear();
             }
 
-            for (int j = 0; j < Constants.COLUMNS; j++)
+            for (int j = 0; j < Constants.RAWS - 2; j++)        // 현재 열의 각 젬에서
             {
-                foreach (GemInformation e in matches[j])
+                foreach (GemInformation e in colMatches[j])     // 매칭되어 파괴되는 젬 모두 표시
                     e.isDestroy = true;
+                colMatches[j].Clear();          // 다음 열을 위해 리스트 비움
             }
         }
-        /*
-            한 행씩 : 매칭이 이루어지는 젬들을 담을 리스트
-            한 젬씩 함수( 다음 젬과 색이 맞으면 리스트에 담기 => 다른색 나오면 for문 종료 => 리스트에 젬이 3개 미만이면 리스트 비움 => 종료)
-            리스트 중복 제거하고 그 젬들에 isDestroy = true 하면 될듯
-
-            한행씩만 해보까???
-         */
     }
 
-    static public void Test(List<GemInformation> gems)
+    static public void Test(List<GemInformation> gems) // 파괴
     {
         for (int i = 0; i < Constants.COLUMNS; i++)
             gems[i].Test();
