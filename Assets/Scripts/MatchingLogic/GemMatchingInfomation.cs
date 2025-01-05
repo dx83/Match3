@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GemMatchingInfomation
 {
@@ -59,6 +60,7 @@ public class GemMatchingInfomation
         4방향으로 이동후 가로 세로 즉시 매칭과 같은 효과
     */
     static List<List<GemInformation>> potentialMatches = new List<List<GemInformation>>();
+    static GemInformation targetGem = new GemInformation();
     static public void IsMatchingForHint(List<GemInformation> gems)
     {
         if (potentialMatches.Count == 0)
@@ -75,17 +77,66 @@ public class GemMatchingInfomation
         //
         //}
 
+        // 이동후 해당 가로줄 세로줄 전부 체크
         for (int i = 0; i < gems.Count; i++) // 모든 젬 대상
         {
-            GemInformation g = gems[i];
-
+            targetGem.color = gems[i].color;
+            targetGem.coord = gems[i].coord;
+            // 검수시 마지막은 항상 타겟젬을 검사 해야되는디...
             // left
             if ((i % Constants.COLUMNS) != 0)
             {
-                // left
-                
-                // up
-                // right
+                int max = i - targetGem.coord.x * Constants.COLUMNS;
+
+                for (int j = 0; j < max; j++)     // 체크할 젬이 속해있는 행 검수
+                {
+                    int current = targetGem.coord.x * Constants.COLUMNS + j;
+                    potentialMatches[j].Add(gems[current]);
+                    
+                    for (int k = 0; k < max; k++)                   // 매칭 확인
+                    {
+                        int next = current + k + 1;
+                        if (gems[current].isSameColor(gems[next]))  // 같은 젬이 연속되는지 확인
+                        {
+                            potentialMatches[j].Add(gems[next]);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (potentialMatches[j].Count < 3)    // 2개 이하인 경우 리스트 비움
+                        potentialMatches[j].Clear();
+                }
+                //for (int j = 0; j < Constants.COLUMNS - 2; j++)
+                //{
+                //    int current = i * Constants.COLUMNS + j;
+                //    potentialMatches[j].Add(gems[current]);
+                //
+                //    for (int k = 0; k < Constants.COLUMNS; k++)     // 매칭 확인
+                //    {
+                //        int next = current + k + 1;
+                //        if (gems[current].isSameColor(gems[next]))  // 같은 젬이 연속되는지 확인
+                //        {
+                //            rawMatches[j].Add(gems[next]);
+                //        }
+                //        else
+                //        {
+                //            break;
+                //        }
+                //    }
+                //
+                //    if (rawMatches[j].Count < 3)    // 2개 이하인 경우 리스트 비움
+                //        rawMatches[j].Clear();
+                //}
+                //
+                //for (int j = 0; j < Constants.COLUMNS - 2; j++)     // 현재 행의 각 젬에서
+                //{
+                //    foreach (GemInformation e in rawMatches[j])     // 매칭되어 파괴되는 젬 모두 표시
+                //        e.isDestroy = true;
+                //    rawMatches[j].Clear();          // 다음 행을 위해 리스트 비움
+                //}
             }
         }
     }

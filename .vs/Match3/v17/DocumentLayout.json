@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Workspace\\_unity\\Match3\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B6F049EB-439F-80BB-E5E4-CA562DF38555}|Assembly-CSharp.csproj|C:\\Workspace\\_unity\\Match3\\assets\\scripts\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B6F049EB-439F-80BB-E5E4-CA562DF38555}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B6F049EB-439F-80BB-E5E4-CA562DF38555}|Assembly-CSharp.csproj|c:\\workspace\\_unity\\match3\\assets\\scripts\\matchinglogic\\gemmatchinginfomation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B6F049EB-439F-80BB-E5E4-CA562DF38555}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\matchinglogic\\gemmatchinginfomation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -12,10 +16,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{B6F049EB-439F-80BB-E5E4-CA562DF38555}|Assembly-CSharp.csproj|C:\\Workspace\\_unity\\Match3\\assets\\scripts\\gem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B6F049EB-439F-80BB-E5E4-CA562DF38555}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B6F049EB-439F-80BB-E5E4-CA562DF38555}|Assembly-CSharp.csproj|C:\\Workspace\\_unity\\Match3\\assets\\scripts\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B6F049EB-439F-80BB-E5E4-CA562DF38555}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Workspace\\_unity\\Match War Project NonDB\\Assets\\01 Scripts\\05_MatchScene\\Main\\GemManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -45,7 +45,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -85,12 +85,11 @@
               "RelativeToolTip": "..\\Match War Project NonDB\\Assets\\01 Scripts\\05_MatchScene\\Main\\GemManager.cs",
               "ViewState": "AgIAACgAAAAAAAAAAAAAAA4AAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-25T12:02:55.971Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-25T12:02:55.971Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Utilities.cs",
               "DocumentMoniker": "C:\\Workspace\\_unity\\Match War Project NonDB\\Assets\\01 Scripts\\05_MatchScene\\GemLogic\\Utilities.cs",
               "RelativeDocumentMoniker": "..\\Match War Project NonDB\\Assets\\01 Scripts\\05_MatchScene\\GemLogic\\Utilities.cs",
@@ -98,8 +97,7 @@
               "RelativeToolTip": "..\\Match War Project NonDB\\Assets\\01 Scripts\\05_MatchScene\\GemLogic\\Utilities.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-25T11:56:10.547Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-25T11:56:10.547Z"
             },
             {
               "$type": "Document",
@@ -139,33 +137,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "GameManager.cs",
               "DocumentMoniker": "C:\\Workspace\\_unity\\Match3\\Assets\\Scripts\\GameManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\GameManager.cs",
               "ToolTip": "C:\\Workspace\\_unity\\Match3\\Assets\\Scripts\\GameManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\GameManager.cs",
-              "ViewState": "AgIAAEYAAAAAAAAAAADgv1EAAAAGAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-21T12:06:39.013Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "GemMatchingInfomation.cs",
               "DocumentMoniker": "C:\\Workspace\\_unity\\Match3\\Assets\\Scripts\\MatchingLogic\\GemMatchingInfomation.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\MatchingLogic\\GemMatchingInfomation.cs",
               "ToolTip": "C:\\Workspace\\_unity\\Match3\\Assets\\Scripts\\MatchingLogic\\GemMatchingInfomation.cs",
               "RelativeToolTip": "Assets\\Scripts\\MatchingLogic\\GemMatchingInfomation.cs",
-              "ViewState": "AgIAACwAAAAAAAAAAAAwwFUAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAAFAAAAAAAAAAAAAAAF4AAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-28T11:39:13.679Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Gem.cs",
               "DocumentMoniker": "C:\\Workspace\\_unity\\Match3\\Assets\\Scripts\\Gem.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Gem.cs",
@@ -173,8 +171,7 @@
               "RelativeToolTip": "Assets\\Scripts\\Gem.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-26T07:54:02.117Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-26T07:54:02.117Z"
             }
           ]
         }
