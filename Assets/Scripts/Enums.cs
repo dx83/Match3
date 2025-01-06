@@ -5,3 +5,7 @@ public enum GemColors
     BlackG, BlueG, GreenG, PurpleG, RedG, YellowG, Empty,
 }
 
+public enum Direction
+{
+    Left = 0, Right, Up, Down,
+}

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -255,9 +256,115 @@ public class GemMatchingInfomation
                 colMatches[j].Clear();          // 다음 열을 위해 리스트 비움
             }
         }
+
+        foreach (var list in rawMatches)
+            list.Clear();
+        foreach (var list in colMatches)
+            list.Clear();
     }
 
-    static public void Test(List<GemInformation> gems) // 파괴
+    static List<GemInformation> mergeList = new List<GemInformation>();
+    static public void IsMatchingAfterSwap(List<GemInformation> gems, GemInformation target, bool hint = false)
+    {
+        int index = 0;
+        if (potentialMatches.Count == 0)
+        {
+            for (int i = 0; i < 4; i++)
+                potentialMatches.Add(new List<GemInformation>());
+        }
+
+        // left
+        index = target.index - 1;
+        SearchForMatcing(gems, target, index, Direction.Left);
+        if (matchingList.Count < 3)
+            matchingList.Clear();
+        else
+            potentialMatches[0].AddRange(matchingList);
+
+        SearchForMatcing(gems, target, index, Direction.Up);
+        mergeList = matchingList.ToList();
+        SearchForMatcing(gems, target, index, Direction.Down);
+        mergeList.AddRange(matchingList);
+
+        if (mergeList.Count < 3)
+            mergeList.Clear();
+        else
+            potentialMatches[0].AddRange(mergeList);
+        mergeList.Clear();
+
+        if (hint && potentialMatches[0].Count > 2)
+            return;
+
+        // right
+        //index = target.index + 1;
+        //potentialMatches[0] = SearchForMatcing(gems, target, index, Direction.Right);
+        //potentialMatches[1] = SearchForMatcing(gems, target, index, Direction.Up);
+        //potentialMatches[1].AddRange(SearchForMatcing(gems, target, index, Direction.Down));
+        // up
+        //index = target.index - Constants.COLUMNS;
+        //potentialMatches[0] = SearchForMatcing(gems, target, index, Direction.Up);
+        //potentialMatches[1] = SearchForMatcing(gems, target, index, Direction.Left);
+        //potentialMatches[1].AddRange(SearchForMatcing(gems, target, index, Direction.Right));
+        // down
+        //index = target.index + Constants.COLUMNS;
+        //potentialMatches[0] = SearchForMatcing(gems, target, index, Direction.Down);
+        //potentialMatches[1] = SearchForMatcing(gems, target, index, Direction.Left);
+        //potentialMatches[1].AddRange(SearchForMatcing(gems, target, index, Direction.Right));
+    }
+
+    static List<GemInformation> matchingList = new List<GemInformation>();// potentialMatches, 리스트 정리 필요
+    static void SearchForMatcing(List<GemInformation> gems, GemInformation target, int index, Direction direction)
+    {
+        matchingList.Clear();
+
+        int start = 0;
+        int loop = 0;
+        int sign = 0;
+        switch(direction)
+        {
+            case Direction.Left:
+                {
+                    start = index - 1;
+                    loop = index % Constants.COLUMNS;
+                    sign = -1;
+                    break;
+                }
+            case Direction.Right:
+                {
+                    start = index + 1;
+                    loop = Constants.COLUMNS - index % Constants.COLUMNS - 1;
+                    sign = 1;
+                    break;
+                }
+            case Direction.Up:
+                {
+                    start = index - Constants.COLUMNS;
+                    loop = index / Constants.RAWS;
+                    sign = -1 * Constants.RAWS;
+                    break;
+                }
+            case Direction.Down:
+                {
+                    start = index + Constants.COLUMNS;
+                    loop = Constants.RAWS - index / Constants.RAWS - 1;
+                    sign = 1 * Constants.RAWS;
+                    break;
+                }
+        }
+
+        for (int i = 0; i < loop; i++)
+        {
+            if (target.isSameColor(gems[start + (i * sign)]))
+            {
+                matchingList.Add(gems[i]);
+            }
+            else
+                break;
+        }
+    }
+
+
+    static public void Test(List<GemInformation> gems) // 테스트 파괴
     {
         for (int i = 0; i < Constants.COLUMNS; i++)
             gems[i].Test();
