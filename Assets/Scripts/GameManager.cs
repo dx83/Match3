@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
 
     bool test = false;
     Coroutine coroutine;
+    List<GemInformation> tempList = new List<GemInformation>();
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -44,15 +45,19 @@ public class GameManager : MonoBehaviour
             //            g.gemImg.color = Color.white;
             //    }
             //}
+            tempList = GemMatchingInformation.SearchForHint(gems);
+            //foreach (GemInformation e in tempList)
+            //    Debug.Log(e.DetermineIndex());
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift))// 매칭 검수
         {
             //GemBoardCheckAndShuffle();
-            foreach (GemInformation e in gems)
-            {
-                if (e.isDestroy) e.Test();
-            }
+            //foreach (GemInformation e in gems)
+            //{
+            //    if (e.GemStatus()) e.Test();
+            //}
+            GemMatchingInformation.FlickerGemEffect(tempList);
         }
 
         //if (test)// 이동, dotween 같은 것 이용할 필요가 있음
@@ -68,7 +73,7 @@ public class GameManager : MonoBehaviour
         foreach (GemInformation g in gems)
         {
             //g.debug.text = g.color.ToString();
-            g.debug.text = g.isDestroy ? "D" : "";
+            g.debug.text = g.GemStatus() ? "D" : "";
             //g.debug.text = g.index.ToString();
         }
     }
@@ -196,7 +201,6 @@ public class GameManager : MonoBehaviour
             color = (GemColors)color,
             rect = objRect,
             gemImg = img,
-            isDestroy = false,
             debug = text,   // Debug
         });
         //Obj.name = ((GemColors)color).ToString();
@@ -310,57 +314,6 @@ public class GameManager : MonoBehaviour
     (보드판 전체) 현재 즉시 매칭이 되는지 검수하고 파괴와 채우기 실행
     스왑 실행 후 매칭이 되는지 검수하고 [젬되돌기] 또는 [파괴와 채우기] 실행
     */
-}
-
-public class GemInformation
-{
-    //public GameObject name;
-    public int index { get { return (coord.x * 7) + coord.y; } }
-    public Point coord;
-    public GemColors color;
-
-    public RectTransform rect;
-    public Image gemImg;
-    public Text debug;
-
-    public bool isDestroy;
-
-    //오브젝트의 이동이 아님, 정보만 교환
-    public void GemChange(GemInformation swapGem, Sprite[] gemSprites)
-    {
-        //this.x = swapGem.x;
-        //this.y = swapGem.y;
-        this.color = swapGem.color;
-        if (gemImg != null)
-        {
-            //this.name.name = ((GemColors)color).ToString();
-            //this.name.name = $"[{x}][{y}]";
-            this.gemImg.sprite = gemSprites[(int)this.color];
-        }
-    }
-
-    public void RandomGem(Sprite[] gemSprites)
-    {
-        int color = Random.Range(0, gemSprites.Length);
-        this.color = (GemColors)color;
-        if (gemImg != null)
-        {
-            this.gemImg.sprite = gemSprites[color];
-        }
-    }
-
-    public bool isSameColor(GemInformation other)
-    {
-        return this.color == other.color;
-    }
-
-    public void Test()
-    {
-        if (gemImg != null)
-        {
-            this.gemImg.gameObject.SetActive(false);
-        }
-    }
 }
 
 public class GemImmutableInfo

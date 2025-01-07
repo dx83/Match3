@@ -7,5 +7,5 @@ public enum GemColors
 
 public enum Direction
 {
-    Left = 0, Right, Up, Down,
+    Left = 0, Right, Up, Down, passless
 }
